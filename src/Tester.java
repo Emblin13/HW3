@@ -22,87 +22,152 @@ public class Tester {
 		list3.addFirst("B");
 	}
 	
-	// Implement the following method using recursion
-	// The method returns the number of white spaces in the input string str.
-	// Write this method below.
-	public int countSpace(String str) {	
 
-		return -1; //change this line of code as needed.
+	public int countSpace(String str) {
+		int spaceCount = 0;
 
+		//end condition for when the string is empty or if the string passed in was null
+		if (str == null || str.isEmpty()) {
+			return 0;
+		}
+		if (str.charAt(0) == ' ') { //checks if 0th index has a white space, and increments spaceCount if it does.
+			spaceCount++;
+		}
+		//Recursively breaks str into smaller substrings by removing the 0th index with each call, until str is empty.
+		//Then adds together all of the white spaces counted and returns that number.
+		spaceCount += this.countSpace(str.substring(1));
+		return spaceCount;
 	}
 	
-	//Check whether s1 is a substring in s2.
-	//For example, if s1="an", and s2="banana", it returns true.
-	//For another example, if s1="bb" and s2="good", it returns false.
-	//If either s1 or s2 is null, return false. 
-	//If either s1 or s2 is empty, return false.
-	//You are NOT allowed to use the contains() method in Java String class.
-	//Write the method below using recursion.
+
 	public boolean myContains(String s1, String s2){
-	
-		return false; //change this line of code as needed.
+		boolean isSubstring = true;
+
+		//If any of these conditions are true, then s1 is not a substring of s2. End condition for recursion
+		if (s1 == null || s2 == null || s1.isEmpty() || s2.isEmpty() || s1.length() > s2.length()) {
+			return false;
+		}
+
+		//checks if s1 is a substring of the first chars in s2. So for example, if s1 has a length of 2, it checks the
+			//first 2 chars in s2 to see if they match. If any of those chars don't match, isSubstring = false.
+		for (int i = 0; i < s1.length(); i++) {
+			if (s1.charAt(i) != s2.charAt(i)) {
+				isSubstring = false;
+			}
+		}
+		//The other end condition
+		if (isSubstring) {
+			return true;
+		}
+		//recursively removes the 0th index of s2 until s1 is found to be a substring of s2, or until s1 can no longer
+			//be a substring of s2.
+		isSubstring = myContains(s1, s2.substring(1));
+
+		return isSubstring;
 	}
-	// Compute the quotient of the integer division of (m / n) using recursion, 
-	// you are NOT allowed to use mathematics operation '/'.
-	// Look the problem from another perspective. What does the division mean?
-	// Division (m/n) also means how many n (s) is contained in the number m.
-	// If n == 0, throw an IllegalArgumentException object.
-	// Write this method below using recursion.
+
+
 	public int div(int m, int n) throws IllegalArgumentException {
-		return -1; //change this line of code as needed.
+		int divCount = 0;
+		if (n == 0) {
+			throw new IllegalArgumentException("Can't divide by 0!");
+		}
+
+		//end condition for when m div n = 0.
+		if (m < n) {
+			return 0;
+		}
+
+		//Since m >= n, that means m div n >= 1, so n is subtracted from m once and divCount is incremented.
+		divCount = div((m-n), n) + 1;
+
+		return divCount;
 	}
 	
-	//Check whether the sum of array arr is 24 or not.
-	//You are required to implement the *private* helper method in the space below this method.
-	//You are NOT allowed to change the provided code in the *public*
-	//    method isSum24(int arr[]).
+
 	public boolean isSum24(int arr[])
 	{
 		return isSum24(arr, 24);
 	}
-	// Implement the private helper method below using recursion.
-	// The method checks whether the sum of all elements in arr 
-	//       equals to the targetSum or not.
-	// Hint:the subproblem is about a subarray.
+
+
 	private boolean isSum24(int arr[], int targetSum) {
-	
-		return false; //change this line of code as needed.
+		boolean sumIs24;
+
+		//Makes an exact duplicate array of arr[] so arr[] isn't modified by the method.
+		int[] arrTemp = arr.clone();
+
+		//End condition for when an empty array is passed in.
+		if (arrTemp.length == 0) {
+			return false;
+		}
+		//End condition for when there are no more elements in arr besides the sum. Returns true if the sum == targetSum
+		if (arrTemp.length == 1) {
+			return (arrTemp[0] == targetSum);
+		}
+
+		//Adds arr[0] to arr[1], then makes a new copy of the array with arr[0] removed. Effectively stores the sum in
+			//the first element of the array.
+		arrTemp[1] += arrTemp[0];
+		arrTemp = Arrays.copyOfRange(arrTemp, 1, arrTemp.length);
+
+		//Recursively calls sumIs24 with the array passed in being 1 element shorter than the original, and with the sum
+			//stored in the first element.
+		sumIs24 = isSum24(arrTemp, targetSum);
+
+		return sumIs24;
 	}
 	
-	//You are NOT allowed to change the provided code in the *public* 
-	//    reverseArray(int a[]) method below.
+
 	public void reverseArray(int a[]) {
 		reverseArray(a, 0, a.length - 1);
 	}
 	
-	//Please write the private reverseArray() using recursion.
-	//The method will reverse the array elements 
-	//      that are located at indices ranging from low to high.
-	//E.g. if int a[] ={3, 1, 5, 4}, after reverseArray(a, 0, 3) is called,
-	//       array a becomes {4, 5, 1, 3}.
-	private void reverseArray(int a[], int low, int high) {
-	
 
+	private void reverseArray(int a[], int low, int high) {
+
+		//End condition is simply when low < high == false
+		if (low < high) {
+			//Swap the elements at the low and high indexes
+			int temp = a[low];
+			a[low] = a[high];
+			a[high] = temp;
+
+			//Recursively calls the reverseArray method with the bounds shrunk by 1 each.
+			reverseArray(a, ++low, --high);//Recursive
+		}
 	}
 	
-	//You are NOT allowed to change the provided code in the *public* 
-	//    recursiveSelectionSort(int a[]) method below.
+
 	public void recursiveSelectionSort(int a[]) {
 		recursiveSelectionSort(a, 0, a.length - 1); //
 	}
 	
-	//Please write the private helper method recursiveSelectionSort() using recursion.
-	//The method will sort in an ascending order the array elements 
-	//      that are located at indices ranging from low to high.
-	//This is a version of recursive selection sort.
-	private void recursiveSelectionSort(int a[], int low, int high) 
-	{
 
+	private void recursiveSelectionSort(int a[], int low, int high) {
 
+		//End condition. Occurs once the sorted region contains the whole array.
+		if (low == high) {
+			return;
+		}
 
-	}//end of method
-	
-	
+		//Traverses unsorted region of array and finds the smallest element
+		int minIndex = low;
+		for (int j = low + 1; j < high + 1; j++) {
+			if (a[j] < a[minIndex]) {
+				minIndex = j;
+			}
+		}
+
+		//Swap the smallest element with the first unsorted data.
+		int temp = a[minIndex];
+		a[minIndex] = a[low];
+		a[low] = temp;
+
+		//Recursively call recursiveSelectionSort with the sorted region incremented forwards
+		recursiveSelectionSort(a, low + 1, high);
+	}
+
 
 	//Please do NOT change the main() method below.
 	//If you do change, you get a zero for this project.
